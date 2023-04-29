@@ -31,21 +31,23 @@ def upload_twitter_data(file_path: str, batch_size: int, couchdb_endpoint: str, 
     with open(file_path, "rb") as original_f:
         for record in ijson.items(original_f, "rows.item", use_float=True):
             try:
-                if i!=0 and i % batch_size == 0:
+                if len(records)!=0 and len(records) % batch_size == 0:
                     logging.info(f"processed {i} records")
                     db.update(records)
                     records = []
                 else:
-                    records.append(Document(record))
+                    if "place_id" in record["doc"]["data"]["geo"]:
+                        records.append(Document(record))
+                    elif "includes" in record["doc"]:
+                        records.append(Document(record))
             except:
-                logging.error(f"exception occurs of records...skipping records: {records}")
+                logging.error(f"exception occurs of records...skipping records: ")
                 records = []
             i += 1
         if len(records) > 0:
             db.update(records)
 
-
-def main():
+def main(): 
     """
     Main method of the program
     """
