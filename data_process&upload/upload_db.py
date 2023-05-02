@@ -1,5 +1,4 @@
 import json
-import ijson
 import time
 import argparse
 from couchdb import Server, Document
@@ -75,13 +74,25 @@ def upload_twitter_data(file_path: str, lga_path: str, batch_size: int, couchdb_
     """
     
     couch = Server(couchdb_endpoint)
+    if database not in couch:
+        couch.create(database)
     db = couch[database]
     lga_dict,state_dict=get_lga_code(lga_path)
     records=[]
     i=0
     with open(file_path, 'r') as f:
-        data = ijson.items(f, 'item',use_float=True)
-        for obj in data:
+        for line in f:
+            if line.strip().endswith(","):
+                line = line[:len(line)-2]
+            obj = None
+            try:
+                obj = json.loads(line)
+                # check if the tweet have location
+                obj["doc"]["includes"]["places"][0]["full_name"]
+            except:
+                # skip if it's not a proper json or doesn't have have location
+                continue
+            
             try:
                 # use the twitter id as doc_id
                 doc_id = obj['id']
@@ -135,8 +146,8 @@ def upload_twitter_data(file_path: str, lga_path: str, batch_size: int, couchdb_
                     
                 # upload docs as batch
                 if len(records)!=0 and len(records) % batch_size == 0:
-                    print(f"processed {i} records")
                     db.update(records)
+                    print(f"processed {i} records")
                     records = []
             except:
                 print(f"exception occurs of object...skipping records: {0}")
@@ -179,4 +190,4 @@ def main():
 if __name__ == "__main__":
     main()
     
-#python3 upload_db.py --twitter_data_in_file_path sample_data_loc.json --lga_data_in_file_path lga_list.json --batch_size 50000 --couchdb_endpoint http://admin:comp90024-60@172.26.136.78:5984 --couchdb_database test
+#python3 upload_db.py --twitter_data_in_file_path sample_data_with_geo_loc.json --lga_data_in_file_path lga_list.json --batch_size 50000 --couchdb_endpoint http://admin:comp90024-60@172.26.136.78:5984 --couchdb_database test
