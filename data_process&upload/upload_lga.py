@@ -12,6 +12,7 @@ def upload_lga_data(lga_path: str, couchdb_endpoint: str, database: str)-> None:
         for obj in data:
             doc = {
                     'coordinates': obj["geo_point_2d"],
+                    'geo_shape': obj["geo_shape"],
                     'ste_code':obj["ste_code"][0],
                     'ste_name':obj["ste_name"][0],
                     'lga_code':obj["lga_code"][0],
@@ -45,3 +46,4 @@ def main():
     
 if __name__ == "__main__":
     main()
+    
