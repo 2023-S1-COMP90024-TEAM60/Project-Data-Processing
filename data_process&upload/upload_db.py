@@ -94,6 +94,9 @@ def upload_twitter_data(file_path: str, lga_path: str, batch_size: int, couchdb_
                 continue
             
             try:
+                lga_name,lga_code,state_code=extract_lga_info(obj,lga_dict,state_dict)
+                if lga_name == '0' and lga_code == '0' and state_code =='0':
+                    continue
                 # use the twitter id as doc_id
                 doc_id = obj['id']
                 # Extract the fields needed from the JSON object
@@ -108,7 +111,7 @@ def upload_twitter_data(file_path: str, lga_path: str, batch_size: int, couchdb_
                 # geo
                 geo_full_name=obj['doc']['includes']['places'][0]['full_name']
                 geo_coord=obj['doc']['includes']['places'][0]['geo']['bbox'] # [longitude of the southwest corner, latitude of the southwest corner, longitude of the northeast corner, latitude of the northeast corner]
-                lga_name,lga_code,state_code=extract_lga_info(obj,lga_dict,state_dict)
+
                 # others 
                 n_retweet=int(obj['doc']['data']['public_metrics']['retweet_count'])
                 n_reply=int(obj['doc']['data']['public_metrics']['reply_count'])
