@@ -14,6 +14,6 @@ Command: <br>
 Command: <br>
 `python3 upload_lga.py --lga_data_in_file_path <lga json file path> --couchdb_endpoint http://admin:comp90024-60@172.26.136.78:5984 --couchdb_database <database name>`
 
-4.upload_sudo.py: Upload the processed sudo data to couchdb
+4. upload_sudo.py: Upload the processed sudo data to couchdb
 Command: <br>
 `python3 upload_sudo.py --pop_sudo_data_in_file_path "sudo/pop.json" --other_sudo_data_in_file_path "sudo/sudo_other.json" --couchdb_endpoint http://admin:comp90024-60@172.26.136.78:5984 --sudo_pop_db <database name1> --sudo_other_data_db <database name2> --sudo_other_data_raw_db <database name3> `
