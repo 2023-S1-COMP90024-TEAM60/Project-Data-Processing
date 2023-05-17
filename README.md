@@ -27,7 +27,7 @@ This repository contains:
 
 - Filter the twiiters that do not contain `full_name`
 - Match the `full_name` with `lga_code` and `state_code`
-  - handle special case. For the case like `full_name=Victoria, Australia`, `state_code=2, lga_code=0`
+  - handle special case. For the case like `full_name=Victoria, Australia`, set:`state_code=2, lga_code=0`
   - Remove the twitters that outside Australia
 - Extract the useful fields
 - Change the data structure for easy computation in the back-end
